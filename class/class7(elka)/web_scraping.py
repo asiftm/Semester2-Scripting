@@ -50,4 +50,28 @@ for i in lst:
         break
 
 
+# url = 'https://www.tomorrowland.com/en/festival/line-up/stages/friday-21-july-2023'
+# response = requests.get(url)
+# html = response.text
+# soup = BeautifulSoup(html,'html.parser')
+#
+# tags = soup.find_all('div', {'class': 'stage'})
+#
+#
+# lst = []
+# for i in tags:
+#     lst.append(i.text.strip().replace('\n',''))
+#
+# for i in lst:
+#     if i.startswith('Mainstage'):
+#         lst2 = i.split('  ')
+#         lst3=[]
+#         for j in lst2:
+#             if j != '' and j != 'Mainstage':
+#                 print(j)
+#         break
+
+
+print("iiii")
+
 
