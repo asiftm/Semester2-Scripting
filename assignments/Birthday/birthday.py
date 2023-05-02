@@ -23,16 +23,14 @@ def wikipedia(day, month):
 
 
 def age(day, month, year):
-    birthdate = datetime.datetime.strptime(f"{year}-{month}-{day}", "%Y-%m-%d").date()
+    birthdate = datetime.datetime.strptime(f"{year}-{month}-{day}","%Y-%m-%d").date()
     current_date = datetime.date.today()
-    age = current_date.year - birthdate.year - (
-                (current_date.month, current_date.day) < (birthdate.month, birthdate.day))
+    age = current_date.year - birthdate.year - ((current_date.month, current_date.day) < (birthdate.month, birthdate.day))
     print(f"Today {age} years old!")
 
 
 def convert_date_format(date_string):
-    date_formats = ['%Y/%m/%d', '%m-%d-%Y', '%Y-%m-%d', '%m/%d/%Y', '%d-%m-%Y', '%d/%m/%Y', '%d %B %Y', '%m-%d-%y',
-                    '%B %d, %Y']
+    date_formats = ['%Y/%m/%d', '%m-%d-%Y', '%Y-%m-%d', '%m/%d/%Y', '%d-%m-%Y', '%d/%m/%Y', '%d %B %Y','%m-%d-%y','%B %d, %Y']
     for date_format in date_formats:
         try:
             date_obj = datetime.datetime.strptime(date_string, date_format)
@@ -42,9 +40,8 @@ def convert_date_format(date_string):
             pass
     return "Invalid date format!"
 
-
 def main():
-    input_birthdate = '     ghdf     '  # input()
+    input_birthdate = '     14 january 1980     '  # input()
     birthdate = convert_date_format(input_birthdate.strip())
     if birthdate == 'Invalid date format!':
         print('Invalid date format!')
