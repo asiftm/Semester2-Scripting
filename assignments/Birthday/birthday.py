@@ -38,12 +38,33 @@ def one(day, month, year):
     tag_lst = soup.find_all('li', {'class': 'event'})
 
     for i in tag_lst:
-        if ('img alt="US"' in str(i)):
+        if 'img alt="US"' in str(i):
             print('Number one hit: ', (i.getText()).replace(' #1 Song: ', ''))
 
 
 def wikipedia(day, month):
-    print('hi')
+    month_name = get_month_name(month)
+    url = f'https://en.wikipedia.org/wiki/{month_name}_{day}'
+    response = requests.get(url)
+    html_code = response.text
+    soup = BeautifulSoup(html_code, 'html.parser')
+    tags = soup.find_all('div', {'class': 'mw-parser-output'})
+
+    temp_lst = (tags[1].getText().split('\n'))
+    birth_lst = []
+    condition = False;
+
+    file = open(f'{month_name}_{day}.txt', 'w')
+
+    for i in temp_lst:
+        if i.strip() == 'Deaths[edit]':
+            break
+        if condition and '[edit]' not in i:
+            file.write(f'{i}\n')
+        if i.strip() == 'Births[edit]':
+            condition = True
+    file.close()
+    print(f'File saved as {month_name}_{day}.txt')
 
 
 def age(day, month, year):
@@ -104,8 +125,10 @@ def main():
         zodiac(bDay, bMonth)
         # historical
         historical(bDay, bMonth)
+        # wikipedia
+        wikipedia(bDay,bMonth)
         # one
-        one(bDay,bMonth,bYear)
+        one(bDay, bMonth, bYear)
 
 
     elif execution_manner == 'multi':
