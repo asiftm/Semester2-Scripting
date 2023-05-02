@@ -1,3 +1,4 @@
+import threading
 import time
 import datetime
 import requests
@@ -25,6 +26,7 @@ def historical(day, month):
     api_url = f'https://api.api-ninjas.com/v1/historicalevents?month={month}&day={day}'
     response = requests.get(api_url, headers={'X-Api-Key': 'J0ceLW0KRsLq43YArvevjQ==1d2uXMtpipaBLTc0'})
     json_data = json.loads(response.text)
+    print('Historical events:')
     for i in json_data:
         print(i['year'] + ' - ' + i['event'])
 
@@ -77,7 +79,7 @@ def age(day, month, year):
 
 def convert_date_format(date_string):
     date_formats = ['%Y/%m/%d', '%m-%d-%Y', '%Y-%m-%d', '%m/%d/%Y', '%d-%m-%Y', '%d/%m/%Y', '%d %B %Y', '%m-%d-%y',
-                    '%B %d, %Y']
+                    '%B %d, %Y', '%Y %B %d']
     for date_format in date_formats:
         try:
             date_obj = datetime.datetime.strptime(date_string, date_format)
@@ -89,26 +91,28 @@ def convert_date_format(date_string):
 
 
 def get_month_name(month_number):
+    x = int(month_number)
     months = {
-        '01': "January",
-        '02': "February",
-        '03': "March",
-        '04': "April",
-        '05': "May",
-        '06': "June",
-        '07': "July",
-        '08': "August",
-        '09': "September",
-        '10': "October",
-        '11': "November",
-        '12': "December"
+        1: "January",
+        2: "February",
+        3: "March",
+        4: "April",
+        5: "May",
+        6: "June",
+        7: "July",
+        8: "August",
+        9: "September",
+        10: "October",
+        11: "November",
+        12: "December"
     }
-    return months[f'{month_number}']
+    month_name = months[x]
+    return month_name
 
 
 def main():
-    input_birthdate = '     14 January 1980     '  # input()
-    execution_manner = 'single'  # input().lower().split()
+    input_birthdate = input()
+    execution_manner = input().lower().split()
 
     birthdate = convert_date_format(input_birthdate.strip())
     if birthdate == 'Invalid date format!':
@@ -126,13 +130,29 @@ def main():
         # historical
         historical(bDay, bMonth)
         # wikipedia
-        wikipedia(bDay,bMonth)
+        wikipedia(bDay, bMonth)
         # one
         one(bDay, bMonth, bYear)
 
 
     elif execution_manner == 'multi':
-        print("")
+        thread_age = threading.Thread(target=age(bDay, bMonth, bYear))
+        thread_zodiac = threading.Thread(target=zodiac(bDay, bMonth))
+        thread_historical = threading.Thread(target=historical(bDay, bMonth))
+        thread_wikipedia = threading.Thread(target=wikipedia(bDay, bMonth))
+        thread_one = threading.Thread(target=one(bDay, bMonth,bYear))
+
+        thread_age.start()
+        thread_zodiac.start()
+        thread_historical.start()
+        thread_wikipedia.start()
+        thread_one.start()
+
+        thread_age.join()
+        thread_zodiac.join()
+        thread_historical.join()
+        thread_wikipedia.join()
+        thread_one.join()
 
 
 if __name__ == "__main__":
