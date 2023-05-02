@@ -112,16 +112,16 @@ def get_month_name(month_number):
 
 def main():
     input_birthdate = input()
-    execution_manner = input().lower().split()
+    execution_manner = input().lower().strip()
 
     birthdate = convert_date_format(input_birthdate.strip())
     if birthdate == 'Invalid date format!':
         print('Invalid date format!')
         exit()
+
     bDay = birthdate.split('-')[2]
     bMonth = birthdate.split('-')[1]
     bYear = birthdate.split('-')[0]
-
     if execution_manner == 'single':
         # age
         age(bDay, bMonth, bYear)
@@ -134,13 +134,12 @@ def main():
         # one
         one(bDay, bMonth, bYear)
 
-
     elif execution_manner == 'multi':
-        thread_age = threading.Thread(target=age(bDay, bMonth, bYear))
-        thread_zodiac = threading.Thread(target=zodiac(bDay, bMonth))
-        thread_historical = threading.Thread(target=historical(bDay, bMonth))
-        thread_wikipedia = threading.Thread(target=wikipedia(bDay, bMonth))
-        thread_one = threading.Thread(target=one(bDay, bMonth,bYear))
+        thread_age = threading.Thread(target=age, args=(bDay, bMonth, bYear))
+        thread_zodiac = threading.Thread(target=zodiac, args=(bDay, bMonth))
+        thread_historical = threading.Thread(target=historical, args=(bDay, bMonth))
+        thread_wikipedia = threading.Thread(target=wikipedia, args=(bDay, bMonth))
+        thread_one = threading.Thread(target=one, args=(bDay, bMonth, bYear))
 
         thread_age.start()
         thread_zodiac.start()
@@ -148,11 +147,11 @@ def main():
         thread_wikipedia.start()
         thread_one.start()
 
-        thread_age.join()
-        thread_zodiac.join()
-        thread_historical.join()
-        thread_wikipedia.join()
-        thread_one.join()
+        # thread_age.join()
+        # thread_zodiac.join()
+        # thread_historical.join()
+        # thread_wikipedia.join()
+        # thread_one.join()
 
 
 if __name__ == "__main__":
