@@ -1,24 +1,22 @@
-date_formats = ['%Y-%m-%d',
-                    '%Y/%m/%d',
-                    '%m-%d-%Y',
-                    '%m/%d/%Y',
-                    '%d-%m-%Y',
-                    '%d/%m/%Y',
-                    '%Y-%m-%d',
-                    '%m/%d/%Y',
-                    '%d-%m-%Y',
-                    '%d/%m/%Y',
-                    '%Y-%m-%d',
-                    '%m/%d/%Y',
-                    '%d-%m-%Y',
-                    '%d/%m/%Y',
-                    '%Y-%m-%d',
-                    '%m/%d/%Y',
-                    '%d-%m-%Y',
-                    '%d/%m/%Y'
-                    ]
-for i in date_formats:
-    while date_formats.count(i)>1:
-        date_formats.remove(i)
+import json
+import requests
+from bs4 import BeautifulSoup
 
-print(date_formats)
+# month_name = 'April'/
+# day = '23'
+# year = '1980'
+# url = f'https://www.onthisday.com/date/{year}/{month_name}/{day}'
+# r = requests.get(url)
+# html_code = r.text
+# soup = BeautifulSoup(html_code, 'html.parser')
+# tag_lst = soup.find_all('li', {'class': 'event'})
+#
+# for i in tag_lst:
+#     if('img alt="US"' in str(i)):
+#         print('Number one hit: ',(i.getText()).replace(' #1 Song: ',''))
+
+# print(f'Zodiac sign: {zodiac_sign}')
+
+
+
+
