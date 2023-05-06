@@ -4,11 +4,9 @@ import datetime
 import requests
 from bs4 import BeautifulSoup
 import json
-import pandas as pd
 
 
 def zodiac(day, month):
-    global zodiac_sign
     month_name = get_month_name(month)
     url = f'https://takemeback.to/{day}-{month_name}'
     r = requests.get(url)
@@ -21,11 +19,7 @@ def zodiac(day, month):
 
 
 def percentage(day, month):
-    df = pd.read_csv("./data.csv")
-    birth_total = df['births'].sum()
-    day_total = df[(df['month'] == int(month)) & (df['date_of_month'] == int(day))]['births'].sum()
-    percent = (day_total * 100) / birth_total
-    print(f'Percentage of people born on same day: {round(percent, 2)} %')
+    print('hi')
 
 
 def historical(day, month):
@@ -118,6 +112,7 @@ def get_month_name(month_number):
 
 def main():
     input_birthdate = input()
+    execution_manner = input().lower().strip()
 
     birthdate = convert_date_format(input_birthdate.strip())
     if birthdate == 'Invalid date format!':
@@ -127,19 +122,11 @@ def main():
     bDay = birthdate.split('-')[2]
     bMonth = birthdate.split('-')[1]
     bYear = birthdate.split('-')[0]
-    try:
-        execution_manner = input().lower().strip()
-    except:
-        print('Invalid input')
-        exit()
-
     if execution_manner == 'single':
         # age
         age(bDay, bMonth, bYear)
         # zodiac
         zodiac(bDay, bMonth)
-        # percentage
-        percentage(bDay, bMonth)
         # historical
         historical(bDay, bMonth)
         # wikipedia
@@ -150,24 +137,21 @@ def main():
     elif execution_manner == 'multi':
         thread_age = threading.Thread(target=age, args=(bDay, bMonth, bYear))
         thread_zodiac = threading.Thread(target=zodiac, args=(bDay, bMonth))
-        thread_percentage = threading.Thread(target=percentage, args=(bDay, bMonth))
         thread_historical = threading.Thread(target=historical, args=(bDay, bMonth))
         thread_wikipedia = threading.Thread(target=wikipedia, args=(bDay, bMonth))
         thread_one = threading.Thread(target=one, args=(bDay, bMonth, bYear))
 
         thread_age.start()
         thread_zodiac.start()
-        thread_percentage.start()
         thread_historical.start()
         thread_wikipedia.start()
         thread_one.start()
 
-        thread_age.join()
-        thread_zodiac.join()
-        thread_percentage.join()
-        thread_historical.join()
-        thread_wikipedia.join()
-        thread_one.join()
+        # thread_age.join()
+        # thread_zodiac.join()
+        # thread_historical.join()
+        # thread_wikipedia.join()
+        # thread_one.join()
 
 
 if __name__ == "__main__":
