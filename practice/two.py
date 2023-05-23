@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 
-all_recipes = []  # all the recipes will be in this list
 
 recipe_dict = {}  # each recipe will be in this dict which will be added to the all_recipes list. the key of this dict is recipe name and the value is ingredients and procedures
 ingredients_procedure_lst = []  # this list will have two items, all ingredients and procedure
@@ -9,7 +8,7 @@ ingredients = ''
 procedure = ''
 recipe_name = ''
 
-# one
+# one (6)
 # https://www.visitrwandaguide.com/food/rwanda-food-cuisine-recipes/
 url = 'https://www.visitrwandaguide.com/food/rwanda-food-cuisine-recipes/'
 response = requests.get(url)
@@ -31,19 +30,16 @@ for tag in table_body_tag:
             ingredients_procedure_lst.append(procedure)
             recipe_dict[recipe_name] = ingredients_procedure_lst
 
-            all_recipes.append(recipe_dict)
-
             ingredients_procedure_lst = []
-            recipe_dict = {}
             ingredients = ''
             procedure = ''
             recipe_name = ''
 
-# two
+# two (3)
 # https://www.internationalcuisine.com/category/rwanda/
 lst = ['rwandan-hard-boiled-eggs', 'rwandan-goat-brochettes', 'rwandan-mandazi']
 for i in lst:
-    recipe_dict = {}
+    ingredients_procedure_lst = []
     ingredients = ''
     procedure = ''
     recipe_name = ''
@@ -75,8 +71,50 @@ for i in lst:
     ingredients_procedure_lst.append(procedure)
     recipe_dict[recipe_name] = ingredients_procedure_lst
 
-    all_recipes.append(recipe_dict)
+# three
+# https://www.food.com/recipe/rwandan-chicken-457010?ic1=suggestedAsset%7Crwandan
+ingredients_procedure_lst = []
+ingredients = ''
+procedure = ''
+recipe_name = ''
+
+url = 'https://www.food.com/recipe/rwandan-chicken-457010?ic1=suggestedAsset%7Crwandan'
+response = requests.get(url)
+html_txt = response.text
+soup = BeautifulSoup(html_txt,'html.parser')
+
+# recipe_name
+name_tags = soup.find('h1', {'class': 'svelte-1muv3s8'})
+recipe_name = name_tags.text
+
+# ingredients
+name_tags = soup.find_all('li', {'style': 'display: contents'})
+txt = ''
+for i in name_tags:
+    txt = txt + i.text.replace(',','').replace('\n\n\n','').replace('  ',' ').replace('\n','').replace('  ',' ').strip() + ', '
+ingredients = txt.rstrip(', ')
+ingredients_procedure_lst.append(ingredients)
+
+# procedure
+procedure_tags = soup.find_all('li', {'class': 'direction svelte-ovaflp'})
+txt = ''
+for tag in procedure_tags:
+    txt = txt + tag.text + ' '
+procedure = txt.rstrip(' ')
+ingredients_procedure_lst.append(procedure)
+
+recipe_dict[recipe_name] = ingredients_procedure_lst
 
 
-for i in all_recipes:
-    print(i)
+#
+# for x,y in recipe_dict.items():
+#     print(x)
+#     print('           ingredients :')
+#     for i in y[0].split(','):
+#         print(i.strip())
+#     print('           method :')
+#     for i in y[1].split('.'):
+#         print(i.strip())
+
+# print(len(recipe_dict))
+
