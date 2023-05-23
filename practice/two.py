@@ -1,4 +1,82 @@
-import one
+from bs4 import BeautifulSoup
+import requests
 
-a = one.abc(7)
-print(a)
+all_recipes = []  # all the recipes will be in this list
+
+recipe_dict = {}  # each recipe will be in this dict which will be added to the all_recipes list. the key of this dict is recipe name and the value is ingredients and procedures
+ingredients_procedure_lst = []  # this list will have two items, all ingredients and procedure
+ingredients = ''
+procedure = ''
+recipe_name = ''
+
+# one
+# https://www.visitrwandaguide.com/food/rwanda-food-cuisine-recipes/
+url = 'https://www.visitrwandaguide.com/food/rwanda-food-cuisine-recipes/'
+response = requests.get(url)
+html_txt = response.text
+soup = BeautifulSoup(html_txt, 'html.parser')
+table_body_tag = soup.find_all('tbody')
+for tag in table_body_tag:
+    for i in tag.text.split('Ø'):
+        full_txt = (i.strip().split('Ingredients'))
+        if len(full_txt) > 1:
+            recipe_name = full_txt[0].strip()
+
+            ingredients_procedure = (full_txt[1].strip().split('Procedure:'))
+            ingredients = ingredients_procedure[0].replace(':\n', '').replace(': \n', '').strip()
+            procedure = ingredients_procedure[1].replace(
+                '\nTry a Rwandan dish today and tell me the results tomorrow!!!', '').strip()
+
+            ingredients_procedure_lst.append(ingredients)
+            ingredients_procedure_lst.append(procedure)
+            recipe_dict[recipe_name] = ingredients_procedure_lst
+
+            all_recipes.append(recipe_dict)
+
+            ingredients_procedure_lst = []
+            recipe_dict = {}
+            ingredients = ''
+            procedure = ''
+            recipe_name = ''
+
+# two
+# https://www.internationalcuisine.com/category/rwanda/
+lst = ['rwandan-hard-boiled-eggs', 'rwandan-goat-brochettes', 'rwandan-mandazi']
+for i in lst:
+    recipe_dict = {}
+    ingredients = ''
+    procedure = ''
+    recipe_name = ''
+
+    url = f'https://www.internationalcuisine.com/{i}/'
+    response = requests.get(url)
+    html_txt = response.text
+    soup = BeautifulSoup(html_txt, 'html.parser')
+
+    # recipe_name
+    name_tags = soup.find('h2', {'class': 'wprm-recipe-name wprm-block-text-bold'})
+    recipe_name = name_tags.text.replace('Rwandan ', '')
+
+    # ingredients
+    ingredients_tags = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
+    txt = ''
+    for tag in ingredients_tags:
+        txt = txt + tag.text + ','
+    ingredients = txt.rstrip(', ')
+
+    # procedure
+    procedure_tags = soup.find_all('div', {'class': 'wprm-recipe-instruction-text'})
+    txt = ''
+    for tag in procedure_tags:
+        txt = txt + tag.text + ' '
+    procedure = txt.strip()
+
+    ingredients_procedure_lst.append(ingredients)
+    ingredients_procedure_lst.append(procedure)
+    recipe_dict[recipe_name] = ingredients_procedure_lst
+
+    all_recipes.append(recipe_dict)
+
+
+for i in all_recipes:
+    print(i)
