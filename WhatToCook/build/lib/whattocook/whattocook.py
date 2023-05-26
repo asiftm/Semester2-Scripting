@@ -1,33 +1,18 @@
 def simple():
     import random
 
-    dish = ''
-
     recipe_dict = scrape()
     random_key = random.choice(list(recipe_dict.keys()))
-    random_item = recipe_dict[random_key]
-
-    dish = dish + random_key + '\n'
-
-    dish = dish + 'Ingredients' + '\n'
-    for i in random_item[0].split(','):
-        if i != '':
-            dish = dish + i.strip() + '\n'
-
-    dish = dish + 'Method' + '\n'
-    for i in random_item[1].split('.'):
-        if i != '':
-            dish = dish + i.strip() + '\n'
-
+    dish = output_format(recipe_dict, random_key)
     return dish
 
 
 def course_specific(chosen_course):
     import random
+    chosen_course = chosen_course.lower()
+    recipe_dict = scrape()
+    file = open('files/recipe_course.csv').read().split('\n')
 
-    dish = ''
-
-    file = open('recipe_course.csv').read().split('\n')
     course_specific_lst = []
     for i in file:
         if i.startswith(chosen_course):
@@ -36,64 +21,79 @@ def course_specific(chosen_course):
                 if len(lst[j]) > 0:
                     course_specific_lst.append(lst[j])
 
-    recipe_dict = scrape()
-    random_key = random.choice(list(recipe_dict.keys()))
-    while random_key not in course_specific_lst:
-        random_key = random.choice(list(recipe_dict.keys()))
+    random_key = random.choice(course_specific_lst)
+    while random_key not in recipe_dict.keys():
+        random_key = random.choice(course_specific_lst)
 
-    random_item = recipe_dict[random_key]
-
-    dish = dish + random_key + '\n'
-
-    dish = dish + 'Ingredients' + '\n'
-    for i in random_item[0].split(','):
-        if i != '':
-            dish = dish + i.strip() + '\n'
-
-    dish = dish + 'Method' + '\n'
-    for i in random_item[1].split('.'):
-        if i != '':
-            dish = dish + i.strip() + '\n'
-
+    dish = output_format(recipe_dict, random_key)
     return dish
 
 
 def seasonal():
     import datetime
-    dish = ''
+    import random
 
-    current_month = datetime.datetime.now().strftime("%B")
-    file = open('vegetable.csv').read().split('\n')
+    current_month = datetime.datetime.now().strftime("%B")  # getting current month
+
+    recipe_dict = scrape()
+    random_key = random.choice(list(recipe_dict.keys()))
+
+    dish = ''
+    file = open('files/vegetable.csv').read().split('\n')
+    all_ingredients = file[0].split(',')
     for i in file:
         if i.startswith(current_month):
-            ingredients = i.rstrip(',').replace(f'{current_month},', '').split(',')
-
+            month_ingredients = i.rstrip(',').replace(f'{current_month},', '').split(',')
             condition = False
             while not condition:
-                dish = simple()
-                for ingredient in ingredients:
-                    if ingredient.strip().lower() in dish:
-                        condition = True
+                dish = output_format(recipe_dict, random_key)
+                for i in range(1, len(all_ingredients)):
+                    if all_ingredients[i].strip().lower() in dish and all_ingredients[i].strip() not in month_ingredients:
+                        random_key = random.choice(list(recipe_dict.keys()))
+                        break
+                    if i == len(all_ingredients) - 1:
+                        return dish
     return dish
 
 
 def combined(chosen_course):
+    import random
     import datetime
+
     current_month = datetime.datetime.now().strftime("%B")
-    file = open('vegetable.csv').read().split('\n')
     dish = ''
-    condition_season = False
-    while not condition_season:
-        dish = course_specific(chosen_course)
-        for i in file:
-            if i.startswith(current_month):
-                ingredients = i.rstrip(',').replace(f'{current_month},', '').split(',')
-                condition_course = False
-                while not condition_course:
-                    for ingredient in ingredients:
-                        if ingredient.strip().lower() in dish:
-                            condition_course = True
-                            break
+
+    recipe_dict = scrape()
+    file = open('files/recipe_course.csv').read().split('\n')
+
+    chosen_course = chosen_course.lower()
+    course_specific_lst = []
+    for i in file:
+        if i.startswith(chosen_course):
+            lst = i.split(',')
+            for j in range(1, len(lst)):
+                if len(lst[j]) > 0:
+                    course_specific_lst.append(lst[j])
+            break
+
+    random_key = random.choice(course_specific_lst)
+    while random_key not in recipe_dict.keys():
+        random_key = random.choice(course_specific_lst)
+
+    file = open('files/vegetable.csv').read().split('\n')
+    all_ingredients = file[0].split(',')
+    for i in file:
+        if i.startswith(current_month):
+            month_ingredients = i.rstrip(',').replace(f'{current_month},', '').split(',')
+            condition = False
+            while not condition:
+                dish = output_format(recipe_dict, random_key)
+                for i in range(1, len(all_ingredients)):
+                    if all_ingredients[i].strip().lower() in dish and all_ingredients[i].strip() not in month_ingredients:
+                        random_key = random.choice(course_specific_lst)
+                        break
+                    if i == len(all_ingredients) - 1:
+                        return dish
     return dish
 
 
@@ -381,6 +381,12 @@ def scrape():
     # seven (1)
     try:
         # https://www.bigoven.com/recipe/rwandan-beef/2372715
+
+        ingredients_procedure_lst = []
+        ingredients = ''
+        procedure = ''
+        recipe_name = ''
+
         url = 'https://www.bigoven.com/recipe/rwandan-beef/2372715'
         response = requests.get(url)
         html_txt = response.text
@@ -415,6 +421,12 @@ def scrape():
     # eight (1)
     try:
         # https://www.supervalue.co.nz/recipes/rewena-bread/
+
+        ingredients_procedure_lst = []
+        ingredients = ''
+        procedure = ''
+        recipe_name = ''
+
         url = 'https://www.supervalue.co.nz/recipes/rewena-bread/'
         response = requests.get(url)
         html_txt = response.text
@@ -455,6 +467,12 @@ def scrape():
     # nine (1)
     try:
         # https://www.internationalcuisine.com/rwandan-sweet-potato-fries/
+
+        ingredients_procedure_lst = []
+        ingredients = ''
+        procedure = ''
+        recipe_name = ''
+
         url = 'https://www.internationalcuisine.com/rwandan-sweet-potato-fries/'
         response = requests.get(url)
         html_txt = response.text
@@ -486,37 +504,26 @@ def scrape():
         procedure = ''
         recipe_name = ''
 
-
     # end
     # now return the recipe_dict dictionary with all the recipes
 
     return recipe_dict
 
 
-def test():
-    recipe_dict = scrape()
-    for i in recipe_dict.keys():
-        print(i)
+def output_format(recipe_dict, random_key):
+    dish = ''
+    random_item = recipe_dict[random_key]
 
+    dish = dish + random_key + '\n'
 
-def main():
-    # test()
-    # print(simple())
-    print(course_specific('snack'))
-    # print(seasonal())
-    # (combined('lunch'))
-    lst = []
-    # recipe_name = ''
-    # while recipe_name != 'isombe':
-    #
-    #     a = simple()
-    #     recipe_name = a.split('\n')[0]
-    #     if recipe_name not in lst:
-    #         lst.append(recipe_name)
-    #     if len(lst) == 8:
-    #         break
-    # print(lst)
+    dish = dish + 'Ingredients' + '\n'
+    for i in random_item[0].split(','):
+        if i != '':
+            dish = dish + i.strip() + '\n'
 
+    dish = dish + 'Method' + '\n'
+    for i in random_item[1].split('.'):
+        if i != '':
+            dish = dish + i.strip() + '\n'
 
-if __name__ == '__main__':
-    main()
+    return dish

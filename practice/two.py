@@ -162,41 +162,40 @@ recipe_name = ''
 #
 #
 #
-# # five(1)
-# # https://veganphysicist.com/rwanda-vegan-agatogo/
-# ingredients_procedure_lst = []
-# ingredients = ''
-# procedure = ''
-# recipe_name = ''
-#
-# url = 'https://veganphysicist.com/rwanda-vegan-agatogo/'
-# response = requests.get(url)
-#
-# html_txt = response.text
-# soup = BeautifulSoup(html_txt, 'html.parser')
-#
-# # recipe_name
-# recipe_name = 'Vegan agatogo'
-#
-#
-# # ingredients
-# ingredients_tags = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
-# txt = ''
-# for tag in ingredients_tags:
-#     txt = txt + tag.text.replace(',','') + ','
-# ingredients = txt.rstrip(', ')
-#
-# # procedure
-# procedure_tags = soup.find_all('li', {'class': 'wprm-recipe-instruction'})
-# txt = ''
-# for tag in procedure_tags:
-#     txt = txt + tag.text + ' '
-# procedure = txt.strip()
-#
-# ingredients_procedure_lst.append(ingredients)
-# ingredients_procedure_lst.append(procedure)
-# recipe_dict[recipe_name]=ingredients_procedure_lst
+ingredients_procedure_lst = []
+ingredients = ''
+procedure = ''
+recipe_name = ''
 
+url = 'https://veganphysicist.com/rwanda-vegan-agatogo/'
+response = requests.get(url)
+print(response)
+
+html_txt = response.text
+soup = BeautifulSoup(html_txt, 'html.parser')
+
+# recipe_name
+recipe_name = 'Vegan agatogo'
+
+# ingredients
+ingredients_tags = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
+txt = ''
+for tag in ingredients_tags:
+    print(tag)
+    txt = txt + tag.text.replace(',', '') + ','
+ingredients = txt.rstrip(', ')
+print(ingredients)
+# procedure
+procedure_tags = soup.find_all('li', {'class': 'wprm-recipe-instruction'})
+txt = ''
+for tag in procedure_tags:
+    txt = txt + tag.text + ' '
+procedure = txt.strip()
+print(procedure)
+
+ingredients_procedure_lst.append(ingredients)
+ingredients_procedure_lst.append(procedure)
+recipe_dict[recipe_name] = ingredients_procedure_lst
 
 # # six(1)
 # # https://blog.firepot.com/recipes/rwandan-ginger-tea-recipe
@@ -310,38 +309,33 @@ recipe_name = ''
 
 
 
-
-
 # nine(1)
-# https://www.internationalcuisine.com/rwandan-sweet-potato-fries/
-url = 'https://www.internationalcuisine.com/rwandan-sweet-potato-fries/'
-response = requests.get(url)
-html_txt = response.text
-soup = BeautifulSoup(html_txt, 'html.parser')
-
-name_tag = soup.find('h2', {'class': 'wprm-recipe-name wprm-block-text-bold'})
-recipe_name = name_tag.text
-
-# ingredients
-ingredient_tag = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
-txt = ''
-for i in ingredient_tag:
-    txt = txt + i.text.strip() + ', '
-ingredients = txt.rstrip(', ')
-
-# procedure
-procedure_tag = soup.find_all('div', {'class': 'wprm-recipe-instruction-text'})
-txt = ''
-for i in procedure_tag:
-    txt = txt + i.text.strip()
-procedure = txt.strip()
-
-ingredients_procedure_lst.append(ingredients)
-ingredients_procedure_lst.append(procedure)
-recipe_dict[recipe_name]=ingredients_procedure_lst
-
-
-
+# # https://www.internationalcuisine.com/rwandan-sweet-potato-fries/
+# url = 'https://www.internationalcuisine.com/rwandan-sweet-potato-fries/'
+# response = requests.get(url)
+# html_txt = response.text
+# soup = BeautifulSoup(html_txt, 'html.parser')
+#
+# name_tag = soup.find('h2', {'class': 'wprm-recipe-name wprm-block-text-bold'})
+# recipe_name = name_tag.text
+#
+# # ingredients
+# ingredient_tag = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
+# txt = ''
+# for i in ingredient_tag:
+#     txt = txt + i.text.strip() + ', '
+# ingredients = txt.rstrip(', ')
+#
+# # procedure
+# procedure_tag = soup.find_all('div', {'class': 'wprm-recipe-instruction-text'})
+# txt = ''
+# for i in procedure_tag:
+#     txt = txt + i.text.strip()
+# procedure = txt.strip()
+#
+# ingredients_procedure_lst.append(ingredients)
+# ingredients_procedure_lst.append(procedure)
+# recipe_dict[recipe_name]=ingredients_procedure_lst
 
 
 
