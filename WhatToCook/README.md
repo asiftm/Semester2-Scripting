@@ -1,7 +1,9 @@
-## What to cook
+# What to cook
 This package provides recipe from 'Rwandan' cuisine.
 
-The package will save a pdf that includes the name, a picture, ingredients and method of a recipe
+The package will saves a pdf file
+
+the pdf includes the name, a picture, ingredients and method of a recipe
 
 
 
@@ -21,19 +23,19 @@ from whattocook import simple
 simple()
 
 
-### example e
-from whattocook import simple
+### example 2
+from whattocook import course_specific
 
 course_specific('breakfast')
 
 
-### example 1
-from whattocook import simple
+### example 3
+from whattocook import seasonal
 
 seasonal()
 
 
-### example 1
-from whattocook import simple
+### example 4
+from whattocook import combined
 
 combined('lunch')
