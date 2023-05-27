@@ -6,5 +6,4 @@ whattocook/whattocook.py
 whattocook.egg-info/PKG-INFO
 whattocook.egg-info/SOURCES.txt
 whattocook.egg-info/dependency_links.txt
-whattocook.egg-info/not-zip-safe
 whattocook.egg-info/top_level.txt

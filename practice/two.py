@@ -162,40 +162,40 @@ recipe_name = ''
 #
 #
 #
-ingredients_procedure_lst = []
-ingredients = ''
-procedure = ''
-recipe_name = ''
-
-url = 'https://veganphysicist.com/rwanda-vegan-agatogo/'
-response = requests.get(url)
-print(response)
-
-html_txt = response.text
-soup = BeautifulSoup(html_txt, 'html.parser')
-
-# recipe_name
-recipe_name = 'Vegan agatogo'
-
-# ingredients
-ingredients_tags = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
-txt = ''
-for tag in ingredients_tags:
-    print(tag)
-    txt = txt + tag.text.replace(',', '') + ','
-ingredients = txt.rstrip(', ')
-print(ingredients)
-# procedure
-procedure_tags = soup.find_all('li', {'class': 'wprm-recipe-instruction'})
-txt = ''
-for tag in procedure_tags:
-    txt = txt + tag.text + ' '
-procedure = txt.strip()
-print(procedure)
-
-ingredients_procedure_lst.append(ingredients)
-ingredients_procedure_lst.append(procedure)
-recipe_dict[recipe_name] = ingredients_procedure_lst
+# ingredients_procedure_lst = []
+# ingredients = ''
+# procedure = ''
+# recipe_name = ''
+#
+# url = 'https://veganphysicist.com/rwanda-vegan-agatogo/'
+# response = requests.get(url)
+# print(response)
+#
+# html_txt = response.text
+# soup = BeautifulSoup(html_txt, 'html.parser')
+#
+# # recipe_name
+# recipe_name = 'Vegan agatogo'
+#
+# # ingredients
+# ingredients_tags = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
+# txt = ''
+# for tag in ingredients_tags:
+#     print(tag)
+#     txt = txt + tag.text.replace(',', '') + ','
+# ingredients = txt.rstrip(', ')
+# print(ingredients)
+# # procedure
+# procedure_tags = soup.find_all('li', {'class': 'wprm-recipe-instruction'})
+# txt = ''
+# for tag in procedure_tags:
+#     txt = txt + tag.text + ' '
+# procedure = txt.strip()
+# print(procedure)
+#
+# ingredients_procedure_lst.append(ingredients)
+# ingredients_procedure_lst.append(procedure)
+# recipe_dict[recipe_name] = ingredients_procedure_lst
 
 # # six(1)
 # # https://blog.firepot.com/recipes/rwandan-ginger-tea-recipe
@@ -339,15 +339,15 @@ recipe_dict[recipe_name] = ingredients_procedure_lst
 
 
 
-for x,y in recipe_dict.items():
-    print(x)
-    print('           ingredients :')
-    for i in y[0].split(','):
-        if i != '':
-            print(i.strip())
-    print('           method :')
-    for i in y[1].split('.'):
-        if i != '':
-            print(i.strip())
-
-print(len(recipe_dict))
+# for x,y in recipe_dict.items():
+#     print(x)
+#     print('           ingredients :')
+#     for i in y[0].split(','):
+#         if i != '':
+#             print(i.strip())
+#     print('           method :')
+#     for i in y[1].split('.'):
+#         if i != '':
+#             print(i.strip())
+#
+# print(len(recipe_dict))

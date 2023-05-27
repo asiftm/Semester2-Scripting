@@ -3,16 +3,23 @@ def simple():
 
     recipe_dict = scrape()
     random_key = random.choice(list(recipe_dict.keys()))
-    dish = output_format(recipe_dict, random_key)
-    return dish
+    # dish = output_format(recipe_dict, random_key)
+
+    output_pdf(recipe_dict, random_key)
 
 
 def course_specific(chosen_course):
     import random
+    import os
+
     chosen_course = chosen_course.lower()
     recipe_dict = scrape()
-    file = open('src/recipe_course.csv').read().split('\n')
 
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_name = '../data/recipe_course.csv'
+    file_path = os.path.join(current_dir, file_name)
+
+    file = open(file_path).read().split('\n')
     course_specific_lst = []
     for i in file:
         if i.startswith(chosen_course):
@@ -25,21 +32,24 @@ def course_specific(chosen_course):
     while random_key not in recipe_dict.keys():
         random_key = random.choice(course_specific_lst)
 
-    dish = output_format(recipe_dict, random_key)
-    return dish
+    output_pdf(recipe_dict, random_key)
 
 
 def seasonal():
     import datetime
     import random
+    import os
 
     current_month = datetime.datetime.now().strftime("%B")  # getting current month
 
     recipe_dict = scrape()
     random_key = random.choice(list(recipe_dict.keys()))
 
-    dish = ''
-    file = open('src/vegetable.csv').read().split('\n')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_name = '../data/vegetable.csv'
+    file_path = os.path.join(current_dir, file_name)
+
+    file = open(file_path).read().split('\n')
     all_ingredients = file[0].split(',')
     for i in file:
         if i.startswith(current_month):
@@ -47,24 +57,33 @@ def seasonal():
             condition = False
             while not condition:
                 dish = output_format(recipe_dict, random_key)
-                for i in range(1, len(all_ingredients)):
-                    if all_ingredients[i].strip().lower() in dish and all_ingredients[i].strip() not in month_ingredients:
+                for j in range(1, len(all_ingredients)):
+                    if all_ingredients[j].strip().lower() in dish and all_ingredients[
+                        j].strip() not in month_ingredients:
                         random_key = random.choice(list(recipe_dict.keys()))
                         break
-                    if i == len(all_ingredients) - 1:
-                        return dish
-    return dish
+                    if j == len(all_ingredients) - 1:
+                        condition = True
+            break
+    output_pdf(recipe_dict, random_key)
 
 
 def combined(chosen_course):
     import random
     import datetime
+    import os
 
     current_month = datetime.datetime.now().strftime("%B")
     dish = ''
+    random_key = ''
 
     recipe_dict = scrape()
-    file = open('src/recipe_course.csv').read().split('\n')
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_name = '../data/recipe_course.csv'
+    file_path = os.path.join(current_dir, file_name)
+
+    file = open(file_path).read().split('\n')
 
     chosen_course = chosen_course.lower()
     course_specific_lst = []
@@ -76,25 +95,27 @@ def combined(chosen_course):
                     course_specific_lst.append(lst[j])
             break
 
-    random_key = random.choice(course_specific_lst)
-    while random_key not in recipe_dict.keys():
-        random_key = random.choice(course_specific_lst)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_name = '../data/vegetable.csv'
+    file_path = os.path.join(current_dir, file_name)
 
-    file = open('src/vegetable.csv').read().split('\n')
+    file = open(file_path).read().split('\n')
     all_ingredients = file[0].split(',')
     for i in file:
         if i.startswith(current_month):
             month_ingredients = i.rstrip(',').replace(f'{current_month},', '').split(',')
             condition = False
             while not condition:
+                random_key = random.choice(course_specific_lst)
                 dish = output_format(recipe_dict, random_key)
-                for i in range(1, len(all_ingredients)):
-                    if all_ingredients[i].strip().lower() in dish and all_ingredients[i].strip() not in month_ingredients:
-                        random_key = random.choice(course_specific_lst)
+                for j in range(1, len(all_ingredients)):
+                    if all_ingredients[j].strip().lower() in dish and all_ingredients[j].strip() not in month_ingredients:
+                        random_key = random.choice(list(recipe_dict.keys()))
                         break
-                    if i == len(all_ingredients) - 1:
-                        return dish
-    return dish
+                    if j == len(all_ingredients) - 1:
+                        condition = True
+            break
+    output_pdf(recipe_dict, random_key)
 
 
 def scrape():
@@ -107,59 +128,6 @@ def scrape():
     ingredients = ''
     procedure = ''
     recipe_name = ''
-
-    # one (6)
-    try:
-        # https://www.visitrwandaguide.com/food/rwanda-food-cuisine-recipes/
-        url = 'https://www.visitrwandaguide.com/food/rwanda-food-cuisine-recipes/'
-        response = requests.get(url)
-        html_txt = response.text
-        soup = BeautifulSoup(html_txt, 'html.parser')
-        table_body_tag = soup.find_all('tbody')
-        for tag in table_body_tag:
-            for i in tag.text.split('Ø'):
-                full_txt = (i.strip().split('Ingredients'))
-                if len(full_txt) > 1:
-                    # recipe_name
-                    recipe_name = full_txt[0].strip()
-
-                    ingredients_procedure = (full_txt[1].strip().split('Procedure:'))
-
-                    # ingredients
-                    ingredients_unorganized = ingredients_procedure[0].replace(':\n', '').replace(': \n',
-                                                                                                  '').strip().split(
-                        ', ')
-                    ingredients_organized = ''
-                    for i in ingredients_unorganized:
-                        nxt_ingredient = False
-                        for char in i:
-                            if i.strip() == 'cut lengthways into 5 strips' or 'de-seeded and coarsely chopped tomato' in i.strip():
-                                break
-                            if char.isnumeric():
-                                nxt_ingredient = True
-                                ingredients_organized = ingredients_organized + ', ' + i
-                                break
-                        if not nxt_ingredient:
-                            ingredients_organized = ingredients_organized + ' ' + i
-                    ingredients = ingredients_organized.lstrip(' ,').replace('.', '')
-
-                    # procedure
-                    procedure = ingredients_procedure[1].replace(
-                        '\nTry a Rwandan dish today and tell me the results tomorrow!!!', '').strip()
-
-                    ingredients_procedure_lst.append(ingredients)
-                    ingredients_procedure_lst.append(procedure)
-                    recipe_dict[recipe_name] = ingredients_procedure_lst
-
-                    ingredients_procedure_lst = []
-                    ingredients = ''
-                    procedure = ''
-                    recipe_name = ''
-    except:
-        ingredients_procedure_lst = []
-        ingredients = ''
-        procedure = ''
-        recipe_name = ''
 
     # two (3)
     try:
@@ -279,46 +247,6 @@ def scrape():
         procedure = txt.rstrip('\n')
         ingredients_procedure_lst.append(procedure)
 
-        recipe_dict[recipe_name] = ingredients_procedure_lst
-    except:
-        ingredients_procedure_lst = []
-        ingredients = ''
-        procedure = ''
-        recipe_name = ''
-
-    # five(1)
-    try:
-        # https://veganphysicist.com/rwanda-vegan-agatogo/
-        ingredients_procedure_lst = []
-        ingredients = ''
-        procedure = ''
-        recipe_name = ''
-
-        url = 'https://veganphysicist.com/rwanda-vegan-agatogo/'
-        response = requests.get(url)
-
-        html_txt = response.text
-        soup = BeautifulSoup(html_txt, 'html.parser')
-
-        # recipe_name
-        recipe_name = 'Vegan agatogo'
-
-        # ingredients
-        ingredients_tags = soup.find_all('li', {'class': 'wprm-recipe-ingredient'})
-        txt = ''
-        for tag in ingredients_tags:
-            txt = txt + tag.text.replace(',', '') + ','
-        ingredients = txt.rstrip(', ')
-
-        # procedure
-        procedure_tags = soup.find_all('li', {'class': 'wprm-recipe-instruction'})
-        txt = ''
-        for tag in procedure_tags:
-            txt = txt + tag.text + ' '
-        procedure = txt.strip()
-
-        ingredients_procedure_lst.append(ingredients)
-        ingredients_procedure_lst.append(procedure)
         recipe_dict[recipe_name] = ingredients_procedure_lst
     except:
         ingredients_procedure_lst = []
@@ -527,3 +455,67 @@ def output_format(recipe_dict, random_key):
             dish = dish + i.strip() + '\n'
 
     return dish
+
+
+def picture(search_string):
+    import json
+    import requests
+
+    url = "https://joj-image-search.p.rapidapi.com/v2/"
+
+    querystring = {"q": f"{search_string}", "hl": "en"}
+
+    headers = {
+        "X-RapidAPI-Key": "9a81a971b3msh34cb1c391aed569p10a071jsnf95a632ba13e",
+        "X-RapidAPI-Host": "joj-image-search.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+    json_data = json.loads(response.text)
+    #
+    img_link = json_data['response']['images'][0]['image']['url']
+    return img_link
+
+
+def output_pdf(recipe_dict, random_key):
+    from PIL import ImageDraw, Image, ImageFont
+    import os
+    import requests
+    import io
+
+    pdf = Image.new('RGBA', (2000, 1200), 'white')
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    font_filename = '../data/Techni Sans V2.ttf'
+    font_path = os.path.join(current_dir, font_filename)
+    font = ImageFont.truetype(font_path, size=24)
+
+    draw = ImageDraw.Draw(pdf)
+
+    random_item = recipe_dict[random_key]
+    draw.text((20, 20), random_key, fill='black', font=font)
+
+    # image
+    # img_link = picture(random_key)
+    img_link = 'https://cdn.britannica.com/55/174255-050-526314B6/brown-Guernsey-cow.jpg'
+    response = requests.get(img_link)
+    img = Image.open(io.BytesIO(response.content))
+    new_size = (200, 200)
+    img = img.resize(new_size)
+    pdf.paste(img, (20, 50))
+
+    txt = 'Ingredients\n'
+    for i in random_item[0].split(','):
+        if i != '':
+            txt = txt + i.strip() + '\n'
+    txt = txt + '\nMethods\n'
+    for i in random_item[1].split('.'):
+        if i != '':
+            txt = txt + i.strip() + '.\n'
+
+    draw.text((20, 300), txt, fill='black', font=font)
+
+    pdf = pdf.convert('RGB')
+    pdf.save(f'{random_key}.pdf',format='PDF')
+
+

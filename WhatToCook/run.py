@@ -1,3 +1,3 @@
-from whattocook import simple,course_specific
+from whattocook import simple
 
-print(simple())
+simple()
