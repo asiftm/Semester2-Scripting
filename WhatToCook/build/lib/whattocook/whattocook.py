@@ -11,7 +11,7 @@ def course_specific(chosen_course):
     import random
     chosen_course = chosen_course.lower()
     recipe_dict = scrape()
-    file = open('files/recipe_course.csv').read().split('\n')
+    file = open('src/recipe_course.csv').read().split('\n')
 
     course_specific_lst = []
     for i in file:
@@ -39,7 +39,7 @@ def seasonal():
     random_key = random.choice(list(recipe_dict.keys()))
 
     dish = ''
-    file = open('files/vegetable.csv').read().split('\n')
+    file = open('src/vegetable.csv').read().split('\n')
     all_ingredients = file[0].split(',')
     for i in file:
         if i.startswith(current_month):
@@ -64,7 +64,7 @@ def combined(chosen_course):
     dish = ''
 
     recipe_dict = scrape()
-    file = open('files/recipe_course.csv').read().split('\n')
+    file = open('src/recipe_course.csv').read().split('\n')
 
     chosen_course = chosen_course.lower()
     course_specific_lst = []
@@ -80,7 +80,7 @@ def combined(chosen_course):
     while random_key not in recipe_dict.keys():
         random_key = random.choice(course_specific_lst)
 
-    file = open('files/vegetable.csv').read().split('\n')
+    file = open('src/vegetable.csv').read().split('\n')
     all_ingredients = file[0].split(',')
     for i in file:
         if i.startswith(current_month):

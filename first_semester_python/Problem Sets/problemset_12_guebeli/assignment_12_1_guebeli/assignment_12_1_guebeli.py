@@ -31,7 +31,7 @@ if __name__ == '__main__':
         try:
             sbe.backup()
         except DistutilsFileError:
-            print("There has been a problem while copying the files.")
+            print("There has been a problem while copying the src.")
     except OSError:
         print("The inserted paths are not valid.\nCheck if the permissions are correct and that the folders exist.")
 
