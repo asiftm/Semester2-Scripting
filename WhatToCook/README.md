@@ -23,21 +23,21 @@ It provides:
     def combined():
 
 
-### example 1
+### Example 1
     from whattocook import simple
     simple()
 
 
-### example 2
+### Example 2
     from whattocook import course_specific
     course_specific('breakfast')
 
 
-### example 3
+### Example 3
     from whattocook import seasonal
     seasonal()
 
 
-### example 4
+### Example 4
     from whattocook import combined
     combined('lunch')
