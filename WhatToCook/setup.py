@@ -6,5 +6,4 @@ setup(name='whattocook',
       author='Asif Mahmud',
       license='MIT',
       packages=['whattocook'],
-      # install_requires=['bs4', 'random', 'requests', 'datetime'],
       )
