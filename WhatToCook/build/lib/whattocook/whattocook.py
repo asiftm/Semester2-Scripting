@@ -496,8 +496,7 @@ def output_pdf(recipe_dict, random_key):
     draw.text((20, 20), random_key, fill='black', font=font)
 
     # image
-    # img_link = picture(random_key)
-    img_link = 'https://cdn.britannica.com/55/174255-050-526314B6/brown-Guernsey-cow.jpg'
+    img_link = picture(random_key)
     response = requests.get(img_link)
     img = Image.open(io.BytesIO(response.content))
     new_size = (200, 200)

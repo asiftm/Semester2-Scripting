@@ -22,19 +22,23 @@
 # print(img_link)
 
 
-from PIL import ImageDraw, Image
-import requests
-import io
+# from PIL import ImageDraw, Image
+# import requests
+# import io
+#
+# image1 = Image.new('RGBA', (1500, 700), 'white')
+# draw = ImageDraw.Draw(image1)
+#
+# img_link = 'https://cdn.britannica.com/55/174255-050-526314B6/brown-Guernsey-cow.jpg'
+# response = requests.get(img_link)
+# new_image = Image.open(io.BytesIO(response.content))
+# new_size = (800, 600)
+# new_image = new_image.resize(new_size)
+#
+# image1.paste(new_image,(0,0))
+#
+# image1.save('image1.pdf')
 
-image1 = Image.new('RGBA', (1500, 700), 'white')
-draw = ImageDraw.Draw(image1)
 
-img_link = 'https://cdn.britannica.com/55/174255-050-526314B6/brown-Guernsey-cow.jpg'
-response = requests.get(img_link)
-new_image = Image.open(io.BytesIO(response.content))
-new_size = (800, 600)
-new_image = new_image.resize(new_size)
 
-image1.paste(new_image,(0,0))
 
-image1.save('image1.pdf')
