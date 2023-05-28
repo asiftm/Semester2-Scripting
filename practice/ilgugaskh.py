@@ -1,7 +1,7 @@
 import requests
 
 sname="Farzana"
-fname= "Tamim"
+fname= "tamim.py"
 
 url = "https://love-calculator.p.rapidapi.com/getPercentage"
 

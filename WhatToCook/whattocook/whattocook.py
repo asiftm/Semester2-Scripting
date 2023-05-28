@@ -517,4 +517,3 @@ def output_pdf(recipe_dict, random_key):
     pdf = pdf.convert('RGB')
     pdf.save(f'{random_key}.pdf',format='PDF')
 
-
